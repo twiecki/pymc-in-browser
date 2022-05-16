@@ -9,6 +9,3 @@ Read [the accompanying blog post](https://www.pymc-labs.io/blog-posts/pymc-in-br
 How to run:
 * Run locally by executing `serve.sh` and going to [http://localhost:8009](http://localhost:8009)
 * Visit <a href="https://twiecki.io/pymc-in-browser.html" target="_blank">[the webapp](https://twiecki.io/pymc-in-browser.html)</a>
-* Embedded below:
-
-<iframe src="https://twiecki.io/pymc-in-browser.html" width="600" height="600"></iframe>
