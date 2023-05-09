@@ -1,12 +1,26 @@
 <html><head>
     <title>PyMC Example</title>
     <meta charset="iso-8859-1">
-    <script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-2.4.2.min.js"></script>
-    <script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-gl-2.4.2.min.js"></script>
-    <script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-widgets-2.4.2.min.js"></script>
-    <script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-tables-2.4.2.min.js"></script>
-    <script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-mathjax-2.4.2.min.js"></script>
-
+        <script
+            type="text/javascript"
+            src="https://cdn.bokeh.org/bokeh/release/bokeh-3.0.3.min.js"
+        ></script>
+        <script
+            type="text/javascript"
+            src="https://cdn.bokeh.org/bokeh/release/bokeh-gl-3.0.3.min.js"
+        ></script>
+        <script
+            type="text/javascript"
+            src="https://cdn.bokeh.org/bokeh/release/bokeh-widgets-3.0.3.min.js"
+        ></script>
+        <script
+            type="text/javascript"
+            src="https://cdn.bokeh.org/bokeh/release/bokeh-tables-3.0.3.min.js"
+        ></script>
+        <script
+            type="text/javascript"
+            src="https://cdn.bokeh.org/bokeh/release/bokeh-mathjax-3.0.3.min.js"
+        ></script>
     <script type="text/javascript">
         Bokeh.set_log_level("info");
     </script>
@@ -21,7 +35,7 @@
       packages = ["xyzservices", "bokeh", "pytensor", "pymc"]
     </py-config>
 
-    <py-title>PyMC in the browser using PyScript</py-title>
+    <h1>PyMC in the browser using PyScript</h1>
     <p>(c) 2023, <a href="https://twitter.com/twiecki">Thomas Wiecki</a></p><br>
 
 This webapp runs the following <a href src="https://pymc.io">PyMC</a> model in your browser:
@@ -34,21 +48,24 @@ with pm.Model() as model:
     idata = pm.sample()</code></pre>
 
 This is a simple beta-binomial or coin-flip model.
-Enter how many coin-flips you did (N) and how many times it came up heads (K). 
-Then press "Sample!" to run the NUTS sampler. 
+Enter how many coin-flips you did (n) and how many times it came up heads (k). 
+Then press "Sample!" to run the NUTS sampler.
 
 For a full explanation, see <a href src="https://www.pymc-labs.io/blog-posts/pymc-in-browser/">this blog post</a>.
-        <py-box widths="1/7;2/7;1/7;2/7;1/7">
-          <py-title>n=</py-title>
-          <py-inputbox id="input_box_n">10</py-inputbox>
-        <py-title>k=</py-title>
-         <py-inputbox id="input_box_k">5</py-inputbox>
-        <py-button id="sample-btn" label="Sample!">
 
-from pyodide import create_proxy
+<div style="display: grid; grid-template-columns: 1fr 2fr 1fr 2fr 1fr;">
+  <label for="input_box_n">n=</label>
+  <input type="text" id="input_box_n" value="10">
+  <label for="input_box_k">k=</label>
+  <input type="text" id="input_box_k" value="5">
+  <button py-click="on_click()" id="sample" class="py-button">Sample!</button>
+</div>
+<py-script>
+
+from pyodide.ffi import create_proxy
 
 @create_proxy
-def on_click(evt):
+def on_click():
     k = Element('input_box_k').element.value
     if k == "":
         k = 5
@@ -56,14 +73,13 @@ def on_click(evt):
     if n == "":
         n = 10
     run_model(n=n, k=k)
-          </py-button>
-        </py-box>
+</py-script>
 
 Sampling will take a couple of seconds. 
 The resulting posterior belief into what 
 probabilities of obtaining heads are plausible will show up below:
     <div id="myplot"></div>
-<br>
+<p>
 <p>Made using <a href="https://pyscript.net">PyScript</a>, <a href="https://pymc.io">PyMC</a>, <a href="https://https://arviz-devs.github.io/arviz/index.html">Arviz</a>, <a href="https://docs.bokeh.org/en/latest/index.html">Bokeh</a>.</p>
     <py-script id="main">
 import warnings
@@ -87,7 +103,7 @@ def run_model(n=10, k=5):
         obs = pm.Binomial("obs", p=p, n=n, observed=k)
         idata = pm.sample(chains=1, progressbar=False)
 
-    p = figure(plot_width=500, plot_height=400, toolbar_location="below")
+    p = figure(width=500, height=400, toolbar_location="below")
     az.plot_posterior(idata, var_names=["p"], show=False, ax=p)
     p.xaxis.axis_label = 'p'
     p_json = json.dumps(json_item(p, "myplot"))
