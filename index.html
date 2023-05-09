@@ -17,14 +17,11 @@
     <script>hljs.initHighlightingOnLoad();</script>
     </head>
     <body>
-        <py-env>
-- bokeh
-- pytensor
-- pymc
-        </py-env>
-
-        <py-title>PyMC in the browser using PyScript</py-title>
-        <p>(c) 2023, <a href="https://twitter.com/twiecki">Thomas Wiecki</a></p><br>
+    <py-config>
+      packages = ["bokeh", "pytensor", "pymc"]
+    </py-config>
+    <py-title>PyMC in the browser using PyScript</py-title>
+    <p>(c) 2023, <a href="https://twitter.com/twiecki">Thomas Wiecki</a></p><br>
 
 This webapp runs the following <a href src="https://pymc.io">PyMC</a> model in your browser:
         <pre><code class="python">import pymc as pm
